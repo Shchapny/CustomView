@@ -1,5 +1,6 @@
 package com.example.customview.ui
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -7,6 +8,7 @@ import android.graphics.PointF
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.core.content.withStyledAttributes
 import com.example.customview.R
 import com.example.customview.utils.AndroidUtils
@@ -27,6 +29,9 @@ class StatsView @JvmOverloads constructor(
     private var lineWidth = AndroidUtils.dp(context, 5f).toFloat()
     private var fontSize = AndroidUtils.dp(context, 40f).toFloat()
     private var colors = emptyList<Int>()
+
+    private var progress = 1f
+    private var valueAnimator: ValueAnimator? = null
 
     init {
         context.withStyledAttributes(attrs, R.styleable.StatsView) {
@@ -52,6 +57,7 @@ class StatsView @JvmOverloads constructor(
     var data = emptyList<Float>()
         set(value) {
             field = value
+//            update()
             invalidate()
         }
 
@@ -73,7 +79,7 @@ class StatsView @JvmOverloads constructor(
         for ((index, datum) in data.withIndex()) {
             val angle = 360f * datum / data.sum()
             paint.color = colors.getOrNull(index) ?: randomColor()
-            canvas.drawArc(oval, startFrom, angle, false, paint)
+            canvas.drawArc(oval, startFrom, angle * progress, false, paint)
             startFrom += angle
         }
 
@@ -86,6 +92,25 @@ class StatsView @JvmOverloads constructor(
             center.y + textPaint.textSize / 4,
             textPaint
         )
+    }
+
+    //внутренняя анимация
+    private fun update() {
+        valueAnimator?.let {
+            it.removeAllUpdateListeners()
+            it.cancel()
+        }
+        progress = 0f
+
+        valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            addUpdateListener { anim ->
+                progress = anim.animatedValue as Float
+                invalidate()
+            }
+            duration = 5_000
+            interpolator = LinearInterpolator()
+            start()
+        }
     }
 
     private fun randomColor() = Random.nextInt(0xFF000000.toInt(), 0xFFFFFFFF.toInt())
