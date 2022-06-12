@@ -30,7 +30,7 @@ class StatsView @JvmOverloads constructor(
     private var fontSize = AndroidUtils.dp(context, 40f).toFloat()
     private var colors = emptyList<Int>()
 
-    private var progress = 1f
+    private var progress = 0f
     private var valueAnimator: ValueAnimator? = null
 
     init {
@@ -57,8 +57,8 @@ class StatsView @JvmOverloads constructor(
     var data = emptyList<Float>()
         set(value) {
             field = value
-//            update()
-            invalidate()
+            update()
+//            invalidate()
         }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -79,12 +79,14 @@ class StatsView @JvmOverloads constructor(
         for ((index, datum) in data.withIndex()) {
             val angle = 360f * datum / data.sum()
             paint.color = colors.getOrNull(index) ?: randomColor()
-            canvas.drawArc(oval, startFrom, angle * progress, false, paint)
+            canvas.drawArc(oval, startFrom + (progress * 360f), angle * progress, false, paint)
             startFrom += angle
         }
 
-        paint.color = colors.first()
-        canvas.drawCircle(center.x, center.y - radius, 1f, paint)
+        if (progress == 1f) {
+            paint.color = colors.first()
+            canvas.drawCircle(center.x, center.y - radius, 1f, paint)
+        }
 
         canvas.drawText(
             "%.2f%%".format(100f),

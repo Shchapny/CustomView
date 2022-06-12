@@ -27,19 +27,19 @@ class MainActivity : AppCompatActivity() {
             )
 
 //цепочка анимаций
-            val alpha = ObjectAnimator.ofFloat(view, View.ALPHA, 0.25f, 1f).apply {
-                duration = 3000
-                interpolator = LinearInterpolator()
-            }
-            val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0f, 1f)
-            val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f, 1f)
-            val scale = ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY).apply {
-                duration = 3000
-                interpolator = BounceInterpolator()
-            }
-            AnimatorSet().apply {
-                playSequentially(scale, alpha)
-            }.start()
+//            val alpha = ObjectAnimator.ofFloat(view, View.ALPHA, 0.25f, 1f).apply {
+//                duration = 3000
+//                interpolator = LinearInterpolator()
+//            }
+//            val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0f, 1f)
+//            val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f, 1f)
+//            val scale = ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY).apply {
+//                duration = 3000
+//                interpolator = BounceInterpolator()
+//            }
+//            AnimatorSet().apply {
+//                playSequentially(scale, alpha)
+//            }.start()
 
 //            view.animate()
 //                .rotation(360f)
